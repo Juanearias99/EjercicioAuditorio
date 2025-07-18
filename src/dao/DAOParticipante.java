@@ -7,6 +7,7 @@ package dao;
 import idao.IDAO;
 import modelo.Auditorio;
 import modelo.Participante;
+import singleton.Singleton;
 import util.LSE;
 
 /**
@@ -26,26 +27,51 @@ public class DAOParticipante implements IDAO {
     }
 
     @Override
-    public void registrarParticipante(Participante participante) {
+    public void registrarParticipante(Participante participante) throws RuntimeException {
         Participante aux = buscarParticipante(participante.getCedula());
-        if(aux == null){
-            
+        if (aux == null) {
+            auditorios.getParticipantes().add(participante);
+            Singleton.getINSTANCIA().escribirAuditorios();
+            return;
         }
+        throw new RuntimeException("Cedula ocupado en este auditorio");
     }
 
     @Override
     public Participante buscarParticipante(String cedula) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (int i = 0; i < auditorios.getParticipantes().size(); i++) {
+            if (auditorios.getParticipantes().get(i).getCedula().equals(cedula)) {
+                return auditorios.getParticipantes().get(i);
+            }
+        }
+        return null;
     }
 
     @Override
-    public void modificarParticipante(Participante participante) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void modificarParticipante(Participante participante) throws RuntimeException {
+        Participante aux = buscarParticipante(participante.getCedula());
+        if (aux != null) {
+            aux.setNombre(participante.getNombre());
+            aux.setApellidos(participante.getApellidos());
+            aux.setEdad(participante.getEdad());
+            aux.setCorreo(participante.getCorreo());
+            aux.setContrasenia(participante.getContrasenia());
+            Singleton.getINSTANCIA().escribirAuditorios();
+            return;
+        }
+        throw new RuntimeException("No se puede modificar la cedula en este auditorio");
     }
 
     @Override
-    public void eliminarParticipante(String cedula) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void eliminarParticipante(String cedula) throws RuntimeException {
+        for (int i = 0; i < auditorios.getParticipantes().size(); i++) {
+            if (auditorios.getParticipantes().get(i).getCedula().equals(cedula)) {
+                auditorios.getParticipantes().remove(i);
+                Singleton.getINSTANCIA().escribirAuditorios();
+                return;
+            }
+            throw new RuntimeException("No se puede eliminar la cedula en este auditorio");
+        }
     }
 
 }

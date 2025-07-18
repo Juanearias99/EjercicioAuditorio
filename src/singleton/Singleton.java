@@ -18,7 +18,7 @@ public class Singleton {
         auditorios = leerAuditorios();
     }
 
-    public Singleton getINSTANCIA() {
+    public static Singleton getINSTANCIA() {
         return INSTANCIA;
     }
 
