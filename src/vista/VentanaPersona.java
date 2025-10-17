@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Auditorio;
 import modelo.Persona;
+import util.LSE;
 
 /**
  *
@@ -62,6 +63,7 @@ public class VentanaPersona extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
+        btnDesocupar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
@@ -80,15 +82,37 @@ public class VentanaPersona extends javax.swing.JFrame {
         });
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegresarActionPerformed(evt);
+            }
+        });
+
+        btnDesocupar.setText("Desocupar");
+        btnDesocupar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDesocuparActionPerformed(evt);
             }
         });
 
@@ -119,7 +143,9 @@ public class VentanaPersona extends javax.swing.JFrame {
                         .addGap(66, 66, 66)))
                 .addContainerGap(48, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(105, Short.MAX_VALUE)
+                .addComponent(btnDesocupar)
+                .addGap(72, 72, 72)
                 .addComponent(btnRegresar)
                 .addContainerGap())
         );
@@ -143,7 +169,9 @@ public class VentanaPersona extends javax.swing.JFrame {
                     .addComponent(btnEditar)
                     .addComponent(btnEliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRegresar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRegresar)
+                    .addComponent(btnDesocupar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -203,7 +231,7 @@ public class VentanaPersona extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         if (txtCedula.getText().isEmpty() || txtNombre.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Persona agregado");
+            JOptionPane.showMessageDialog(null, "Persona agregada");
             return;
         } else {
             try {
@@ -220,10 +248,65 @@ public class VentanaPersona extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String cedula = txtCedula.getText();
+        Persona persona = controlador.buscarP(cedula);
+        if (persona != null) {
+            txtNombre.setText(persona.getNombre());
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontro la persona");
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        if (txtCedula.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese la cedula");
+            return;
+        } else {
+            try {
+                String cedula = txtCedula.getText();
+                String nombre = txtNombre.getText();
+                Persona persona = new Persona(cedula, nombre);
+                controlador.editarP(persona);
+                JOptionPane.showMessageDialog(null, "Persona editada");
+                limpiarCampos();
+                llenarTabla();
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if (txtCedula.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Ingrese la cedula");
+            return;
+        } else {
+            try {
+                String cedula = txtCedula.getText();
+                controlador.eliminarP(cedula);
+                JOptionPane.showMessageDialog(null, "Persona editada");
+                limpiarCampos();
+                llenarTabla();
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+    }
+    private void btnDesocuparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesocuparActionPerformed
+        auditorio.setTema("");
+        auditorio.setPersonas(new LSE<>());
+        auditorio.escribirAuditorios();
+        JOptionPane.showMessageDialog(null, "Auditorio desocupado exitosamente");
+        VentanaPrincipal vp = new VentanaPrincipal();
+        vp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnDesocuparActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnDesocupar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegresar;
