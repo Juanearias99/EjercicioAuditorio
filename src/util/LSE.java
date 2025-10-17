@@ -37,17 +37,64 @@ public class LSE<T> implements Serializable, ILSE<T> {
 
     @Override
     public T get(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Para el indice" + index);
+        } else {
+            if (index == 0) {
+                return primero.getDato();
+            } else {
+                Nodo<T> nodoActual = this.primero;
+                int contador = 0;
+                while (contador < index) {
+                    nodoActual = nodoActual.getSiguiente();
+                    contador++;
+                }
+                return nodoActual.getDato();
+            }
+        }
     }
 
     @Override
     public void add(T dato, int index) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Para el indice" + index);
+        } else {
+            Nodo<T> nodoNuevo = new Nodo<>(dato);
+            if (index == 0) {
+                nodoNuevo.setSiguiente(primero);
+                this.primero = nodoNuevo;
+            } else {
+                Nodo<T> nodoActual = this.primero;
+                int contador = 0;
+                while (contador < index - 1) {
+                    nodoActual = nodoActual.getSiguiente();
+                    contador++;
+                }
+                nodoNuevo.setSiguiente(nodoActual.getSiguiente());
+                nodoActual.setSiguiente(nodoNuevo);
+            }
+            size++;
+        }
     }
 
     @Override
     public void remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Para el indice" + index);
+        } else {
+            if (index == 0) {
+                primero = primero.getSiguiente();
+            } else {
+                Nodo<T> nodoActual = this.primero;
+                int contador = 0;
+                while (contador < index - 1) {
+                    nodoActual = nodoActual.getSiguiente();
+                    contador++;
+                }
+                nodoActual.setSiguiente(nodoActual.getSiguiente().getSiguiente());
+            }
+            size--;
+        }
     }
 
     @Override
