@@ -7,6 +7,7 @@ package controlador;
 import dao.DAOPersona;
 import modelo.Auditorio;
 import modelo.Persona;
+import util.LSE;
 
 /**
  *
@@ -18,6 +19,10 @@ public class ControladorPersona {
     
     public ControladorPersona(Auditorio auditorio) {
         this.dao = new DAOPersona(auditorio);
+    }
+    
+    public LSE<Persona>getPersonas(){
+        return dao.getPersonas();
     }
     
     public void agregarP(Persona persona) throws RuntimeException {

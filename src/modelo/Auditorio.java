@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import persistencia.Persistencia;
 import util.LSE;
 
 /**
@@ -35,8 +36,16 @@ public class Auditorio {
     public void setTema(String tema) {
         this.tema = tema;
     }
-    
-    public boolean validarPersona(){
+
+    public boolean validarPersona() {
         return !this.personas.isEmpty();
+    }
+
+    public boolean validarTema() {
+        return !this.tema.equals("");
+    }
+
+    public void escribirAuditorios() {
+        Persistencia.getInstancia().escribirAuditorios();
     }
 }
